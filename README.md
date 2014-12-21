@@ -2,6 +2,12 @@
 
 ## Commands
 
+#### `M-x eshellutil-popup`
+
+Popup eshell buffer next to current buffer
+
+## Eshell Commands
+
 #### `e file`
 
 Open `file` and close shell buffer
