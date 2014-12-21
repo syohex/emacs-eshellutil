@@ -79,10 +79,17 @@
       (elscreen-get-current-screen)
     0))
 
+(defun eshellutil--validate-window-number ()
+  (let ((windows (length (window-list))))
+    (when (>= windows 3)
+      (error "Error: too many windows(%d)." windows))))
+
 ;;;###autoload
 (defun eshellutil-popup ()
   (interactive)
   (eshellutil--save-current-windows)
+  (when (>= (length (window-list)) 3)
+    (delete-other-windows))
   (when (one-window-p)
     (split-window-right))
   (other-window 1)
