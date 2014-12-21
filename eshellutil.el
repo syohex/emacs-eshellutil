@@ -25,6 +25,39 @@
 
 (require 'eshell)
 
+(defgroup eshellutil nil
+  "eshell utilities"
+  :group 'eshell)
+
+(defface eshellutil-prompt-directory
+  '((t (:foreground "cyan" :weight bold)))
+  "Face of directory in eshell prompt."
+  :group 'eshellutil)
+
+(defface eshellutil-prompt-git-branch
+  '((t (:foreground "magenta" :weight bold)))
+  "Face of 'git branch' in eshell prompt"
+  :group 'eshellutil)
+
+(defun eshellutil--git-dirty ()
+  (let ((ret (process-file "git" nil nil nil "diff-index" "--quiet" "HEAD")))
+    (if (= ret 1)
+        "*"
+      "")))
+
+(defun eshellutil--prompt-branch ()
+  (let ((cur-branch (car (vc-git-branches))))
+    (if (not cur-branch)
+        ""
+      (concat "(" cur-branch (eshellutil--git-dirty) ")"))))
+
+(defun eshellutil-prompt ()
+  (format "%s%s %s "
+          (propertize (concat (file-name-nondirectory (eshell/pwd)) ":")
+                      'face 'eshellutil-prompt-directory)
+          (propertize (eshellutil--prompt-branch) 'face 'eshellutil-prompt-git-branch)
+          (propertize "%" 'face 'bold)))
+
 (defvar eshellutil--previous-buffer nil)
 
 (defun eshellutil-shell-pop-up-hook ()
