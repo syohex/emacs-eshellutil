@@ -133,6 +133,18 @@
     (find-file filepath)
     (delete-window curwin)))
 
+;;
+;; initialize
+;;
+
+;;;###autoload
+(defun eshellutil-setup ()
+  (setq eshell-prompt-regexp "^[^#%\n]*[#%] ")
+  (setq-default eshell-prompt-function 'eshellutil-prompt)
+
+  (define-key eshell-mode-map (kbd "C-M-r") 'eshellutil-restore)
+  (define-key eshell-mode-map (kbd "C-l") 'eshellutil-recenter))
+
 (provide 'eshellutil)
 
 ;;; eshellutil.el ends here
