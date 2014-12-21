@@ -24,6 +24,10 @@
 ;;; Code:
 
 (require 'eshell)
+(require 'em-dirs)
+(require 'vc-git)
+
+(declare-function elscreen-get-current-screen "elscreen")
 
 (defgroup eshellutil nil
   "eshell utilities"
@@ -58,17 +62,54 @@
           (propertize (eshellutil--prompt-branch) 'face 'eshellutil-prompt-git-branch)
           (propertize "%" 'face 'bold)))
 
+(defsubst eshellutil--window-register-name ()
+  (if (not (featurep 'elscreen))
+      :eshellutil
+    (intern (format "eshellutil%d" (elscreen-get-current-screen)))))
+
 (defvar eshellutil--previous-buffer nil)
 
-(defun eshellutil-shell-pop-up-hook ()
-  (setq eshellutil--previous-buffer (current-buffer)))
+(defun eshellutil--save-current-windows ()
+  (setq eshellutil--previous-buffer (current-buffer))
+  (let ((register (eshellutil--window-register-name)))
+    (window-configuration-to-register register)))
+
+(defsubst eshellutil--eshell-index ()
+  (if (featurep 'elscreen)
+      (elscreen-get-current-screen)
+    0))
+
+;;;###autoload
+(defun eshellutil-popup ()
+  (interactive)
+  (eshellutil--save-current-windows)
+  (when (one-window-p)
+    (split-window-right))
+  (other-window 1)
+  (eshell (eshellutil--eshell-index)))
+
+(defun eshellutil-restore ()
+  (interactive)
+  (let ((register (eshellutil--window-register-name)))
+    (jump-to-register register)))
+
+(defun eshellutil-recenter ()
+  (interactive)
+  (recenter 0))
+
+;;
+;; commands
+;;
+
+(defun eshell--cde-last-directory ()
+  (let ((file-name (buffer-file-name eshellutil--previous-buffer)))
+    (or (and file-name (file-name-directory file-name))
+        (and (eq major-mode 'dired-mode) dired-directory)
+        (with-current-buffer eshellutil--previous-buffer
+          default-directory))))
 
 (defun eshell/cde ()
-  (let* ((file-name (buffer-file-name eshellutil--previous-buffer))
-         (dir (or (and file-name (file-name-directory file-name))
-                  (and (eq major-mode 'dired-mode) dired-directory)
-                  (with-current-buffer eshellutil--previous-buffer
-                    default-directory))))
+  (let ((dir (eshell--cde-last-directory)))
     (eshell/cd dir)))
 
 (defun eshell/cdp ()
