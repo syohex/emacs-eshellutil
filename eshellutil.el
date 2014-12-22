@@ -146,6 +146,9 @@
   (setq-default eshell-prompt-regexp "^[^#%\n]*[#%] ")
   (setq-default eshell-prompt-function 'eshellutil-prompt))
 
+;;;###autoload
+(add-hook 'eshell-mode-hook 'eshellutil-eshell-mode-hook)
+
 (provide 'eshellutil)
 
 ;;; eshellutil.el ends here
