@@ -142,7 +142,7 @@
   (setq eshell-prompt-regexp "^[^#%\n]*[#%] ")
   (setq-default eshell-prompt-function 'eshellutil-prompt)
 
-  (define-key eshell-mode-map (kbd "C-M-r") 'eshellutil-restore)
+  (define-key eshell-mode-map (kbd "M-_") 'eshellutil-restore)
   (define-key eshell-mode-map (kbd "C-l") 'eshellutil-recenter))
 
 (provide 'eshellutil)
