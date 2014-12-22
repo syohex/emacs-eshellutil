@@ -134,16 +134,17 @@
     (delete-window curwin)))
 
 ;;
-;; initialize
+;; Setup
 ;;
 
 ;;;###autoload
-(defun eshellutil-setup ()
-  (setq eshell-prompt-regexp "^[^#%\n]*[#%] ")
-  (setq-default eshell-prompt-function 'eshellutil-prompt)
-
+(defun eshellutil-eshell-mode-hook ()
   (define-key eshell-mode-map (kbd "C-\\") 'eshellutil-restore)
   (define-key eshell-mode-map (kbd "C-l") 'eshellutil-recenter))
+
+(with-eval-after-load 'em-prompt
+  (setq-default eshell-prompt-regexp "^[^#%\n]*[#%] ")
+  (setq-default eshell-prompt-function 'eshellutil-prompt))
 
 (provide 'eshellutil)
 
