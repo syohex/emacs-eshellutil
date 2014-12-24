@@ -127,11 +127,9 @@
     (eshell/cd dir)))
 
 (defun eshell/e (file)
-  (let ((curwin (get-buffer-window))
-        (filepath (concat default-directory file)))
-    (other-window 1)
-    (find-file filepath)
-    (delete-window curwin)))
+  (let ((path (concat default-directory file)))
+    (eshellutil-restore)
+    (find-file path)))
 
 ;;
 ;; Setup
