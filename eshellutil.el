@@ -55,10 +55,23 @@
         ""
       (concat "(" cur-branch (eshellutil--git-dirty) ")"))))
 
+(defun eshellutil--prompt-cwd ()
+  (let ((cwd (abbreviate-file-name (eshell/pwd))))
+    (with-temp-buffer
+      (insert cwd)
+      (let ((depth (count-matches "/" (point-min) (point-max))))
+        (if (<= depth 3)
+            cwd
+          (goto-char (point-min))
+          (search-forward "/" nil t 2)
+          (let ((parent (buffer-substring-no-properties (point-min) (point))))
+            (search-forward "/" nil t (- depth 2 1))
+            (let ((child (buffer-substring-no-properties (1- (point)) (point-max))))
+              (concat parent ".." child))))))))
+
 (defun eshellutil-prompt ()
-  (format "%s%s %s "
-          (propertize (concat (file-name-nondirectory (eshell/pwd)) ":")
-                      'face 'eshellutil-prompt-directory)
+  (format "%s %s %s "
+          (propertize (eshellutil--prompt-cwd) 'face 'eshellutil-prompt-directory)
           (propertize (eshellutil--prompt-branch) 'face 'eshellutil-prompt-git-branch)
           (propertize "%" 'face 'bold)))
 
