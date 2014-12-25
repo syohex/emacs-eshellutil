@@ -87,10 +87,10 @@
   (let ((register (eshellutil--window-register-name)))
     (window-configuration-to-register register)))
 
-(defsubst eshellutil--eshell-index ()
+(defsubst eshellutil--shell-buffer-name ()
   (if (featurep 'elscreen)
-      (elscreen-get-current-screen)
-    0))
+      (format " *eshellutil<%d>*" (elscreen-get-current-screen))
+    " *eshellutil*"))
 
 (defun eshellutil--validate-window-number ()
   (let ((windows (length (window-list))))
@@ -106,7 +106,9 @@
   (when (one-window-p)
     (split-window-right))
   (other-window 1)
-  (eshell (eshellutil--eshell-index)))
+  (let ((shell-bufname (eshellutil--shell-buffer-name)))
+    (eshell)
+    (rename-buffer shell-bufname)))
 
 (defun eshellutil-restore ()
   (interactive)
