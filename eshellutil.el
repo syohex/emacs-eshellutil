@@ -146,11 +146,12 @@
     (eshell/cd dir)))
 
 (defun eshell/cdp ()
-  (let ((dir (cl-loop with cwd = default-directory
-                      for d in '(".git" ".hg" ".svn")
-                      when (locate-dominating-file cwd d)
-                      return (file-name-directory it))))
-    (eshell/cd dir)))
+  (let ((rootdir (if (fboundp 'vc-root-dir)
+                     (ignore-errors (vc-root-dir))
+                   (vc-git-root default-directory))))
+    (unless rootdir
+      (error "Here is not managed by VCS."))
+    (eshell/cd rootdir)))
 
 (defun eshell/e (file)
   (let ((path (concat default-directory file)))
