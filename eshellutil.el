@@ -146,9 +146,9 @@
     (eshell/cd dir)))
 
 (defun eshell/cdp ()
-  (let ((rootdir (if (fboundp 'vc-root-dir)
-                     (ignore-errors (vc-root-dir))
-                   (vc-git-root default-directory))))
+  (let ((rootdir (or (and (fboundp 'vc-root-dir)
+                          (ignore-errors (vc-root-dir)))
+                     (vc-git-root default-directory))))
     (unless rootdir
       (error "Here is not managed by VCS."))
     (eshell/cd rootdir)))
