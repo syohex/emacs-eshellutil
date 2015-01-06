@@ -28,6 +28,7 @@
 (require 'vc-git)
 
 (declare-function elscreen-get-current-screen "elscreen")
+(declare-function magit-status "magit")
 
 (defgroup eshellutil nil
   "eshell utilities"
@@ -157,6 +158,9 @@
   (let ((path (concat default-directory file)))
     (eshellutil-restore)
     (find-file path)))
+
+(defun eshell/m ()
+  (magit-status default-directory))
 
 ;;
 ;; Setup
