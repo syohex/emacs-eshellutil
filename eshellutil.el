@@ -118,7 +118,10 @@
       (other-window 1)
       (let ((shell-buf (get-buffer shell-bufname)))
         (if (buffer-live-p shell-buf)
-            (switch-to-buffer shell-buf)
+            (progn
+              (switch-to-buffer shell-buf)
+              (goto-char (point-max))
+              (eshell-bol))
           (eshell)
           (rename-buffer shell-bufname))))))
 
