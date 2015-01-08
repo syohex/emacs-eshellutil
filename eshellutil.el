@@ -127,6 +127,9 @@
 
 (defun eshellutil-restore ()
   (interactive)
+  (when (and (eq major-mode 'eshell-mode)
+             (not (string= (buffer-name) (eshellutil--shell-buffer-name))))
+    (error "This buffer is *eshell*, but this is not popup-ed buffer."))
   (let ((register (eshellutil--window-register-name)))
     (jump-to-register register)))
 
