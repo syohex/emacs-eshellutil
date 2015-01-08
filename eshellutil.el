@@ -121,7 +121,7 @@
             (progn
               (switch-to-buffer shell-buf)
               (goto-char (point-max))
-              (eshell-bol))
+              (eshell-kill-input))
           (eshell)
           (rename-buffer shell-bufname))))))
 
