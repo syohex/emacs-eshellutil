@@ -137,6 +137,15 @@
   (interactive)
   (recenter 0))
 
+(defun eshellutil-kill-output ()
+  (interactive)
+  (let* ((kill-func (if current-prefix-arg 'kill-region 'delete-region)))
+    (save-excursion
+      (goto-char (eshell-beginning-of-output))
+      (insert "*** output flushed ***\n")
+      (let ((current-prefix-arg nil))
+        (funcall kill-func (point) (eshell-end-of-output))))))
+
 ;;
 ;; commands
 ;;
@@ -174,8 +183,10 @@
 
 ;;;###autoload
 (defun eshellutil-eshell-mode-hook ()
+  (define-key eshell-mode-map (kbd "C-c C-o") 'eshellutil-kill-output)
   (define-key eshell-mode-map (kbd "C-\\") 'eshellutil-restore)
-  (define-key eshell-mode-map (kbd "C-l") 'eshellutil-recenter))
+  (define-key eshell-mode-map (kbd "C-l") 'eshellutil-recenter)
+  (define-key eshell-mode-map (kbd "M-g M-f") 'ffap-other-window))
 
 (with-eval-after-load 'em-prompt
   (setq-default eshell-prompt-regexp "^[^#%\n]*[#%] ")
