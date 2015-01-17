@@ -184,6 +184,11 @@
 ;;;###autoload
 (add-hook 'eshell-mode-hook 'eshellutil-eshell-mode-hook)
 
+;; aliases
+(require 'em-alias)
+(add-to-list 'eshell-command-aliases-list (list "s" "git st"))
+(add-to-list 'eshell-command-aliases-list (list "d" "git --no-pager diff"))
+
 (provide 'eshellutil)
 
 ;;; eshellutil.el ends here
