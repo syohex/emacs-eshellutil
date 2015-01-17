@@ -35,7 +35,7 @@
   :group 'eshell)
 
 (defface eshellutil-prompt-directory
-  '((t (:foreground "cyan" :weight bold)))
+  '((t (:foreground "green" :weight bold)))
   "Face of directory in eshell prompt."
   :group 'eshellutil)
 
@@ -71,7 +71,7 @@
               (concat parent ".." child))))))))
 
 (defun eshellutil-prompt ()
-  (format "%s %s%s "
+  (format "[%s] %s%s "
           (propertize (eshellutil--prompt-cwd) 'face 'eshellutil-prompt-directory)
           (propertize (eshellutil--prompt-branch) 'face 'eshellutil-prompt-git-branch)
           (propertize "%" 'face 'bold)))
