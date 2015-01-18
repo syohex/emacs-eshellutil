@@ -68,10 +68,10 @@
           (let ((parent (buffer-substring-no-properties (point-min) (point))))
             (search-forward "/" nil t (- depth 2 1))
             (let ((child (buffer-substring-no-properties (1- (point)) (point-max))))
-              (concat parent ".." child))))))))
+              (concat "[" parent ".." child "]"))))))))
 
 (defun eshellutil-prompt ()
-  (format "[%s] %s%s "
+  (format "%s %s%s "
           (propertize (eshellutil--prompt-cwd) 'face 'eshellutil-prompt-directory)
           (propertize (eshellutil--prompt-branch) 'face 'eshellutil-prompt-git-branch)
           (propertize "%" 'face 'bold)))
