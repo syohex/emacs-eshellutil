@@ -62,7 +62,7 @@
       (insert cwd)
       (let ((depth (count-matches "/" (point-min) (point-max))))
         (if (<= depth 3)
-            cwd
+            (concat "[" cwd "]")
           (goto-char (point-min))
           (search-forward "/" nil t 2)
           (let ((parent (buffer-substring-no-properties (point-min) (point))))
