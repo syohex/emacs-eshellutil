@@ -35,7 +35,7 @@
   :group 'eshell)
 
 (defface eshellutil-prompt-directory
-  '((t (:foreground "green" :weight bold)))
+  '((t (:foreground "yellow" :weight bold)))
   "Face of directory in eshell prompt."
   :group 'eshellutil)
 
