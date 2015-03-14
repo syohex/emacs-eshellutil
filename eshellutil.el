@@ -198,6 +198,9 @@
 (add-to-list 'eshell-command-aliases-list (list "s" "git st"))
 (add-to-list 'eshell-command-aliases-list (list "d" "git --no-pager diff"))
 
+;; environment variables
+(setenv "GIT_PAGER" "cat")
+
 (provide 'eshellutil)
 
 ;;; eshellutil.el ends here
