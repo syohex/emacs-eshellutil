@@ -160,11 +160,12 @@
     (eshell/cd dir)))
 
 (defun eshell/cdp ()
-  (let ((rootdir (or (and (fboundp 'vc-root-dir)
-                          (ignore-errors (vc-root-dir)))
-                     (vc-git-root default-directory))))
+  (let ((rootdir (cl-loop for dir in '(".git/" ".hg/" ".svn/" "project.clj"
+                                       "Gemfile" "package.json" "Build.PL" "Makefile")
+                          when (locate-dominating-file default-directory dir)
+                          return it)))
     (unless rootdir
-      (error "Here is not managed by VCS."))
+      (error "Can't find project root."))
     (eshell/cd rootdir)))
 
 (defun eshell/e (file)
