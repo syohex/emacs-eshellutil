@@ -1,6 +1,6 @@
 ;;; eshellutil.el --- My own Eshell utilities
 
-;; Copyright (C) 2014 by Syohei YOSHIDA
+;; Copyright (C) 2015 by Syohei YOSHIDA
 
 ;; Author: Syohei YOSHIDA <syohex@gmail.com>
 ;; URL: https://github.com/syohex/emacs-eshellutil
@@ -44,31 +44,18 @@
   "Face of 'git branch' in eshell prompt"
   :group 'eshellutil)
 
-(defun eshellutil--git-dirty ()
-  (let ((ret (process-file "git" nil nil nil "diff-index" "--quiet" "HEAD")))
-    (if (= ret 1)
-        "*"
-      "")))
-
 (defun eshellutil--prompt-branch ()
   (let ((cur-branch (car (vc-git-branches))))
     (if (not cur-branch)
         ""
-      (concat "(" cur-branch (eshellutil--git-dirty) ") "))))
+      (concat "(" cur-branch ") "))))
 
 (defun eshellutil--prompt-cwd ()
-  (let ((cwd (abbreviate-file-name (eshell/pwd))))
-    (with-temp-buffer
-      (insert cwd)
-      (let ((depth (count-matches "/" (point-min) (point-max))))
-        (if (<= depth 3)
-            (concat "[" cwd "]")
-          (goto-char (point-min))
-          (search-forward "/" nil t 2)
-          (let ((parent (buffer-substring-no-properties (point-min) (point))))
-            (search-forward "/" nil t (- depth 2 1))
-            (let ((child (buffer-substring-no-properties (1- (point)) (point-max))))
-              (concat "[" parent ".." child "]"))))))))
+  (let* ((cwd (eshell/pwd))
+         (dir (if (string= (abbreviate-file-name cwd) "~")
+                  "~"
+                (file-name-nondirectory (directory-file-name cwd)))))
+    (concat "[" dir "]")))
 
 (defun eshellutil-prompt ()
   (format "%s %s%s "
