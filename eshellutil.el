@@ -26,6 +26,7 @@
 (require 'eshell)
 (require 'em-dirs)
 (require 'vc-git)
+(require 'em-tramp)
 
 (declare-function elscreen-get-current-screen "elscreen")
 (declare-function magit-status "magit")
