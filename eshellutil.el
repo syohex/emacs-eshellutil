@@ -1,6 +1,6 @@
 ;;; eshellutil.el --- My own Eshell utilities
 
-;; Copyright (C) 2015 by Syohei YOSHIDA
+;; Copyright (C) 2016 by Syohei YOSHIDA
 
 ;; Author: Syohei YOSHIDA <syohex@gmail.com>
 ;; URL: https://github.com/syohex/emacs-eshellutil
@@ -170,6 +170,9 @@
 
 ;;;###autoload
 (defun eshellutil-eshell-mode-hook ()
+  (add-to-list 'eshell-command-aliases-list '("s" "git st"))
+  (add-to-list 'eshell-command-aliases-list '("d" "git --no-pager diff"))
+
   (define-key eshell-mode-map (kbd "M-o") 'eshellutil-kill-output)
   (define-key eshell-mode-map (kbd "C-\\") 'eshellutil-restore)
   (define-key eshell-mode-map (kbd "C-l") 'eshellutil-recenter)
@@ -181,11 +184,6 @@
 
 ;;;###autoload
 (add-hook 'eshell-mode-hook 'eshellutil-eshell-mode-hook)
-
-;; aliases
-(require 'em-alias)
-(add-to-list 'eshell-command-aliases-list (list "s" "git st"))
-(add-to-list 'eshell-command-aliases-list (list "d" "git --no-pager diff"))
 
 ;; environment variables
 (setenv "GIT_PAGER" "cat")
