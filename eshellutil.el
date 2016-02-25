@@ -28,8 +28,6 @@
 (require 'vc-git)
 (require 'em-tramp)
 
-(declare-function elscreen-get-current-screen "elscreen")
-
 (defgroup eshellutil nil
   "eshell utilities"
   :group 'eshell)
@@ -63,22 +61,13 @@
           (propertize (eshellutil--prompt-branch) 'face 'eshellutil-prompt-git-branch)
           (propertize "%" 'face 'bold)))
 
-(defsubst eshellutil--window-register-name ()
-  (if (not (featurep 'elscreen))
-      :eshellutil
-    (intern (format "eshellutil%d" (elscreen-get-current-screen)))))
-
 (defvar eshellutil--previous-buffer nil)
 
 (defun eshellutil--save-current-windows ()
   (setq eshellutil--previous-buffer (current-buffer))
-  (let ((register (eshellutil--window-register-name)))
-    (window-configuration-to-register register)))
+  (window-configuration-to-register :eshellutil))
 
-(defsubst eshellutil--shell-buffer-name ()
-  (if (featurep 'elscreen)
-      (format " *eshellutil<%d>*" (elscreen-get-current-screen))
-    " *eshellutil*"))
+(defconst eshellutil--shell-buffer-name " *eshellutil*")
 
 (defun eshellutil--validate-window-number ()
   (let ((windows (length (window-list))))
@@ -93,10 +82,9 @@
 ;;;###autoload
 (defun eshellutil-popup ()
   (interactive)
-  (let ((shell-bufname (eshellutil--shell-buffer-name)))
+  (let ((shell-bufname eshellutil--shell-buffer-name))
     (if (eshellutil--buffer-visible-p shell-bufname)
-        (progn
-          (other-window 1))
+        (other-window 1)
       (eshellutil--save-current-windows)
       (when (>= (length (window-list)) 3)
         (delete-other-windows))
@@ -115,10 +103,9 @@
 (defun eshellutil-restore ()
   (interactive)
   (when (and (eq major-mode 'eshell-mode)
-             (not (string= (buffer-name) (eshellutil--shell-buffer-name))))
+             (not (string= (buffer-name) eshellutil--shell-buffer-name)))
     (error "This buffer is *eshell*, but this is not popup-ed buffer."))
-  (let ((register (eshellutil--window-register-name)))
-    (jump-to-register register)))
+  (jump-to-register :eshellutil))
 
 (defun eshellutil-recenter ()
   (interactive)
