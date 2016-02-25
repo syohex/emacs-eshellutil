@@ -29,7 +29,6 @@
 (require 'em-tramp)
 
 (declare-function elscreen-get-current-screen "elscreen")
-(declare-function magit-status "magit")
 
 (defgroup eshellutil nil
   "eshell utilities"
@@ -155,14 +154,6 @@
     (unless rootdir
       (error "Can't find project root."))
     (eshell/cd rootdir)))
-
-(defun eshell/e (file)
-  (let ((path (concat default-directory file)))
-    (eshellutil-restore)
-    (find-file path)))
-
-(defun eshell/m ()
-  (magit-status default-directory))
 
 ;;
 ;; Setup
