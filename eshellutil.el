@@ -144,15 +144,27 @@
       (error "Can't find project root."))
     (eshell/cd rootdir)))
 
+(defun eshellutil--git-common (subcmd)
+  (let ((str (with-temp-buffer
+               (if (null args)
+                   (process-file "git" nil t nil subcmd "-sb")
+                 (apply #'process-file "git" nil t nil subcmd "-sb" args))
+               (buffer-substring-no-properties (point-min) (point-max)))))
+    (eshell-buffered-print str)
+    (eshell-flush)))
+
+(defun eshell/s (&rest args)
+  (eshellutil--git-common "status"))
+
+(defun eshell/d (&rest args)
+  (eshellutil--git-common "diff"))
+
 ;;
 ;; Setup
 ;;
 
 ;;;###autoload
 (defun eshellutil-eshell-mode-hook ()
-  (add-to-list 'eshell-command-aliases-list '("s" "git st"))
-  (add-to-list 'eshell-command-aliases-list '("d" "git --no-pager diff"))
-
   (define-key eshell-mode-map (kbd "M-o") 'eshellutil-kill-output)
   (define-key eshell-mode-map (kbd "C-\\") 'eshellutil-restore)
   (define-key eshell-mode-map (kbd "C-l") 'eshellutil-recenter)
