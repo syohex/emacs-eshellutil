@@ -144,17 +144,27 @@
       (error "Can't find project root."))
     (eshell/cd rootdir)))
 
-(defun eshellutil--git-common (subcmd)
+(defun eshellutil--git-common (subcmd &optional propertize-fn)
   (let ((str (with-temp-buffer
                (if (null args)
                    (process-file "git" nil t nil subcmd "-sb")
                  (apply #'process-file "git" nil t nil subcmd "-sb" args))
-               (buffer-substring-no-properties (point-min) (point-max)))))
+               (when propertize-fn
+                 (funcall propertize-fn)) (setq tmstms (buffer-string))
+               (buffer-substring (point-min) (point-max)))))
     (eshell-buffered-print str)
     (eshell-flush)))
 
 (defun eshell/s (&rest args)
-  (eshellutil--git-common "status"))
+  (eshellutil--git-common
+   "status"
+   (lambda ()
+     (goto-char (point-min))
+     (while (re-search-forward "^\\(\\s-?\\)\\([AMD]\\)" nil t)
+       (let ((face (if (string-empty-p (match-string 1))
+                       'vc-locally-added-state
+                     'vc-edited-state)))
+         (put-text-property (match-beginning 2) (match-end 2) 'face face))))))
 
 (defun eshell/d (&rest args)
   (eshellutil--git-common "diff"))
