@@ -1,10 +1,11 @@
-;;; eshellutil.el --- My own Eshell utilities
+;;; eshellutil.el --- My own Eshell utilities -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2016 by Syohei YOSHIDA
 
 ;; Author: Syohei YOSHIDA <syohex@gmail.com>
 ;; URL: https://github.com/syohex/emacs-eshellutil
 ;; Version: 0.01
+;; Package-Requires: ((emacs "24.4"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -25,6 +26,7 @@
 (require 'em-dirs)
 (require 'vc-git)
 (require 'em-tramp)
+(require 'subr-x)
 
 (defgroup eshellutil nil
   "eshell utilities"
